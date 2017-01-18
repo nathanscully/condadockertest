@@ -6,8 +6,9 @@ ENV TERM linux
 # Deps
 RUN set -ex \
     && buildDeps='git build-essential pkg-config libglib2.0-0 libxext6 libsm6 libxrender1 libpq-dev gcc' \
-    && apt-get remove python3 python3-setuptools -yqq \
     && apt-get update -yqq \
+    && apt-get remove --purge -yqq python3 python3-setuptools \
+    && apt-get clean \
     && apt-get install -yqq --no-install-recommends \
         $buildDeps \
         apt-utils \
@@ -23,7 +24,7 @@ RUN set -ex \
     && wget --quiet https://repo.continuum.io/miniconda/Miniconda3-4.1.11-Linux-x86_64.sh -O ~/miniconda.sh \
     && /bin/bash ~/miniconda.sh -b -p /opt/conda \
     && rm ~/miniconda.sh \
-    && wget http://www.eu.apache.org/dist/maven/maven-3/3.3.9/binaries/apache-maven-3.3.9-bin.tar.gz \
+    && wget --quiet http://www.eu.apache.org/dist/maven/maven-3/3.3.9/binaries/apache-maven-3.3.9-bin.tar.gz \
     && tar -zxf apache-maven-3.3.9-bin.tar.gz -C /usr/local/ \
     && ln -s /usr/local/apache-maven-3.3.9/bin/mvn /usr/local/bin/mvn \
     && apt-get clean \
@@ -33,26 +34,20 @@ ENV PATH /opt/conda/bin:$PATH
 
 
 RUN condaDeps='cython scipy scikit-learn scikit-image pandas matplotlib nltk psycopg2 pytz simplejson sqlalchemy boto gensim' \
-    && conda install nomkl \
-    && conda install $condaDeps -y \
-    && pip install --upgrade pip \
-    && pip install --ignore-installed setuptools \
+    && conda install -q nomkl \
+    && conda install -q $condaDeps -y \
+    && pip install -q --upgrade pip \
+    && pip install -q --ignore-installed setuptools \
     && pipDeps='abba tensorflow progressbar2 sqlalchemy-redshift statsmodels awscli' \
-    && pip install --upgrade $pipDeps \
+    && pip install -q --upgrade $pipDeps \
     && curl -sL https://deb.nodesource.com/setup_6.x | bash - \
     && apt-get update  -yqq \
     && apt-get install -yqq --no-install-recommends nodejs \
     && curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add - \
     && echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list \
-    && apt-get update  -yqq \
+    && apt-get update -yqq \
     && apt-get install -yqq --no-install-recommends yarn \
-    && git clone https://github.com/apache/zeppelin.git /usr/src/zeppelin \
-    && cd /usr/src/zeppelin \
-    && dev/change_scala_version.sh "2.11" \
-    && mkdir -m 777 zeppelin-web/bower_components \
-    && echo '{ "allow_root": true }' > /root/.bowerrc \
-    && cd /usr/src/zeppelin \
-    && apt-get autoremove \
+    && apt-get autoremove  -yqq \
     && apt-get remove --purge -yqq $buildDeps yarn nodejs npm \
     && apt-get clean \
     && rm -rf \
