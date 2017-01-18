@@ -7,10 +7,6 @@ dependencies:
     - docker info
     - docker build --rm=false -t nathanscully/condadockertest .
 
-test:
-  override:
-    - docker run -p nathanscully/condadockertest
-
 deployment:
   hub:
     branch: master
