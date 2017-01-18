@@ -6,6 +6,7 @@ ENV TERM linux
 # Deps
 RUN set -ex \
     && buildDeps='git build-essential pkg-config libglib2.0-0 libxext6 libsm6 libxrender1 libpq-dev gcc' \
+    && apt-get remove python3 python3-setuptools -yqq \
     && apt-get update -yqq \
     && apt-get install -yqq --no-install-recommends \
         $buildDeps \
@@ -45,6 +46,12 @@ RUN condaDeps='cython scipy scikit-learn scikit-image pandas matplotlib nltk psy
     && echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list \
     && apt-get update  -yqq \
     && apt-get install -yqq --no-install-recommends yarn \
+    && git clone https://github.com/apache/zeppelin.git /usr/src/zeppelin \
+    && cd /usr/src/zeppelin \
+    && dev/change_scala_version.sh "2.11" \
+    && mkdir -m 777 zeppelin-web/bower_components \
+    && echo '{ "allow_root": true }' > /root/.bowerrc \
+    && cd /usr/src/zeppelin \
     && apt-get autoremove \
     && apt-get remove --purge -yqq $buildDeps yarn nodejs npm \
     && apt-get clean \
