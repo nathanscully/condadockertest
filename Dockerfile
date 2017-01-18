@@ -63,6 +63,7 @@ RUN condaDeps='cython scipy scikit-learn scikit-image pandas matplotlib nltk psy
     && mv /usr/zeppelin* $ZEPPELIN_HOME \
     && mkdir -p $ZEPPELIN_HOME/logs \
     && mkdir -p $ZEPPELIN_HOME/run \
+    && cd $ZEPPELIN_HOME \
     && apt-get autoremove  -yqq \
     && apt-get remove --purge -yqq $buildDeps yarn nodejs npm \
     && apt-get clean \
