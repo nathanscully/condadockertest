@@ -24,7 +24,7 @@ RUN set -ex \
     && rm ~/miniconda.sh \
     && wget http://www.eu.apache.org/dist/maven/maven-3/3.3.9/binaries/apache-maven-3.3.9-bin.tar.gz \
     && tar -zxf apache-maven-3.3.9-bin.tar.gz -C /usr/local/ \
-    && ln -s /usr/local/apache-maven-3.3.9/bin/mvn /usr/local/bin/mvn
+    && ln -s /usr/local/apache-maven-3.3.9/bin/mvn /usr/local/bin/mvn \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
