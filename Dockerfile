@@ -1,4 +1,4 @@
-FROM debian/spark:2.0.2-hadoop-2.7
+FROM gettyimages/spark:2.0.2-hadoop-2.7
 # Never prompts the user for choices on installation/configuration of packages
 ENV DEBIAN_FRONTEND noninteractive
 ENV TERM linux
