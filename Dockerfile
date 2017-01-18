@@ -47,6 +47,17 @@ RUN condaDeps='cython scipy scikit-learn scikit-image pandas matplotlib nltk psy
     && echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list \
     && apt-get update -yqq \
     && apt-get install -yqq --no-install-recommends yarn \
+    && git clone https://github.com/apache/zeppelin.git /usr/src/zeppelin \
+    && cd /usr/src/zeppelin \
+    && dev/change_scala_version.sh "2.11" \
+    && mkdir -m 777 zeppelin-web/bower_components \
+    && echo '{ "allow_root": true }' > /root/.bowerrc \
+    && cd /usr/src/zeppelin \
+    && mvn -e -Pbuild-distr --batch-mode package -DskipTests -Pscala-2.11 -Ppyspark -Phadoop-2.7 -pl 'angular,jdbc,markdown,python,shell,spark,spark-dependencies,zeppelin-display,zeppelin-distribution,zeppelin-interpreter,zeppelin-server,zeppelin-web,zeppelin-zengine' \
+    && tar xvf /usr/src/zeppelin/zeppelin-distribution/target/zeppelin*.tar.gz -C /usr/ \
+    && mv /usr/zeppelin* $ZEPPELIN_HOME \
+    && mkdir -p $ZEPPELIN_HOME/logs \
+    && mkdir -p $ZEPPELIN_HOME/run \
     && apt-get autoremove  -yqq \
     && apt-get remove --purge -yqq $buildDeps yarn nodejs npm \
     && apt-get clean \
