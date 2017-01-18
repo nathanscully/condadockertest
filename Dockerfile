@@ -31,7 +31,12 @@ RUN set -ex \
     && rm -rf /var/lib/apt/lists/*
 
 ENV PATH /opt/conda/bin:$PATH
-
+ENV PATH /opt/conda/bin:$PATH
+ENV ZEPPELIN_PORT 8080
+ENV ZEPPELIN_HOME /usr/zeppelin
+ENV ZEPPELIN_CONF_DIR $ZEPPELIN_HOME/conf
+ENV ZEPPELIN_NOTEBOOK_DIR $ZEPPELIN_HOME/notebook
+ENV MAVEN_OPTS="-Xmx2g -XX:MaxPermSize=1024m"
 
 RUN condaDeps='cython scipy scikit-learn scikit-image pandas matplotlib nltk psycopg2 pytz simplejson sqlalchemy boto gensim' \
     && conda install -q nomkl \
